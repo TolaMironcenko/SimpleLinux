@@ -162,14 +162,14 @@ rootfs() {
     cd $build/busybox
     tar -xvjf $root/downloads/busybox-*.tar.bz2 &> $fulllogfile
     cd busybox-*
-    cp -v $root/busybox/busybox-rootfs-config .config
+    cp -v $root/busybox/busybox-rootfs-config .config &> $fulllogfile
     printf "$UGREEN** Configuring busybox\n$RESET"
     make oldconfig &> $root/.log/busybox-configure.log
     check $? "Configure busybox all logs in .log"
     printf "$UGREEN** Building busybox\n$RESET"
     make $makeflags &> $root/.log/busybox-build.log
     check $? "Build busybox all logs in .log"
-    cp -v busybox $rootfspath/usr/bin
+    cp -v busybox $rootfspath/usr/bin &> $fulllogfile
     cd $rootfspath/usr/bin
     for i in $(./busybox --list); do ln -s busybox $i; done
 
