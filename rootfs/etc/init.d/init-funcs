@@ -1,0 +1,44 @@
+#!/bin/sh
+
+#--- import colors ---
+. /etc/init.d/colors.sh
+#---------------------
+
+#---------------------- rc function to poweron or poweroff ------------
+rc() {
+    if [ -d /etc/rc.d ]  && [ $0 == "/etc/init.d/rcK" ]; then
+        for i in $(ls -r /etc/rc.d); do
+            /etc/rc.d/$i stop
+        done
+        return 1
+    fi
+    for i in /etc/rc.d/??*; do
+        [ ! -f "$i" ] && continue
+        case "$i" in
+            *.sh)
+                (
+                    trap - INT QUIT TSTP
+                    set start
+                    . $i
+                )
+                ;;
+            *)
+                $i start
+                ;;
+        esac
+    done
+    sleep 1
+    # clear
+    return 1
+}
+#----------------------------------------------------------------------
+
+#---------- check status function -----------
+check() {
+    if [ $1 -ne 0 ]; then
+        printf "$URED** ERROR: $2\n$RESET"
+        return
+    fi
+    printf "$UGREEN** SUCCESS: $2\n$RESET"
+}
+#--------------------------------------------

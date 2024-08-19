@@ -1,0 +1,9 @@
+::sysinit:/etc/init.d/rcS
+
+::ctrlaltdel:/sbin/reboot
+::shutdown:/etc/init.d/rcK
+
+tty1::respawn:/sbin/getty 38400 tty1
+tty2::askfirst:/sbin/getty 38400 tty2
+tty3::askfirst:/sbin/getty 38400 tty3
+tty4::askfirst:/sbin/getty 38400 tty4

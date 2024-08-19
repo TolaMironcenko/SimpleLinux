@@ -1,0 +1,26 @@
+#!/bin/sh
+
+. /etc/init.d/colors.sh
+
+case "$1" in
+    start)
+        printf "$UYELLOW Starting networking\n$RESET"
+        /sbin/ifup -a &> /dev/null
+        check $? "networking"
+        echo $! > /var/run/networking.pid
+        ;;
+    stop)
+        printf "$UYELLOW Stopping netowrking\n$RESET"
+        /sbin/ifdown -a
+        check $? "Stop networking"
+        rm /var/run/networking.pid
+        ;;
+    restart|reload)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "$0 init script usage: $0 {start|stop|restart|reload}"
+        return 1
+esac
+return $?

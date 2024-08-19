@@ -1,7 +1,10 @@
 #!/bin/sh
 
+#--- Import colors ---
 . ./colors.sh
+#---------------------
 
+#------- Check errors func -----------------
 check() {
     if [ $1 -ne 0 ]; then
         printf "$URED** ERROR: $2\n$RESET"
@@ -9,3 +12,4 @@ check() {
     fi
     printf "$UGREEN** SUCCESS: $2\n$RESET" 
 }
+#-------------------------------------------
