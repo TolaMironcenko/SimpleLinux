@@ -27,7 +27,7 @@ build-wimic-image:
 
   # script for building artifacts
   script:
-    - ./build-image.sh
+    - ./build_image.sh
 
   # installing artifacts to artifacts directory
   after_script:
