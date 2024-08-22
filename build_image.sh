@@ -248,7 +248,7 @@ if [ "$1" = "clean" ]; then
 fi
 
 clean
-# download_sources
+download_sources
 # kernel
 # kernel_modules
 # initramfs
