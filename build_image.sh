@@ -152,10 +152,10 @@ initramfs() {
     cp $root/busybox/busybox-initramfs-config .config
     export PATH=$PATH:/opt/toolchains/x86_64-buildroot-linux-uclibc-gcc/bin
     printf "$UGREEN** Configuring busybox\n$RESET"
-    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- oldconfig &> $root/.log/busybox-configure.log
+    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- oldconfig &> $fulllogfile
     check $? "Configure busybox all logs in .log"
     printf "$UGREEN** Building busybox\n$RESET"
-    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &> $root/.log/busybox-build.log
+    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &> $fulllogfile
     check $? "Build busybox all logs in .log"
     cp busybox $initramfspath/bin
     cd $initramfspath/bin
