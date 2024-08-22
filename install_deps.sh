@@ -8,7 +8,7 @@ apt upgrade -y -qq &&
 #-------------- Nodejs ---------------------------------------------
 apt install -y curl
 # curl -sL https://deb.nodesource.com/setup_6.x | bash - &&
-apt install -y --force-yes -qq build-essential make cmake u-boot-tools bc file &&
+apt install -y --force-yes -qq build-essential make cmake u-boot-tools bc file wget &&
 #-------------------------------------------------------------------
 
 #----------- Toolchains --------------------------------------------
