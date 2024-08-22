@@ -8,7 +8,7 @@ variables:
   IMAGE_NAME: SimpleLinux
   IMAGE_VERSION: 0.0.1
 
-build-wimic-image:
+build-iso-image:
   stage: build
 
   artifacts:
@@ -33,4 +33,4 @@ build-wimic-image:
   after_script:
     - rm -rvf artifacts
     - mkdir -v artifacts
-    - cp -v build/SimpleLinux.iso artifacts/$IMAGE_NAME-$IMAGE_VERSION-$CI_COMMIT_BRANCH-$CI_PIPELINE_ID.iso
+    - cp -v build/simplelinux.iso artifacts/$IMAGE_NAME-$IMAGE_VERSION-$CI_COMMIT_BRANCH-$CI_PIPELINE_ID.iso

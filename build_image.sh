@@ -87,10 +87,10 @@ kernel() {
 kernel_modules() {
     printf "$UGREEN** Building Linux Kernel modules\n$RESET"
     cd $build/kernel/linux-*
-    make modules &> fulllogfile
+    make modules &>> fulllogfile
     check $? "Build Linux Kernel modules"
     printf "$UGREEN** Installing Linux Kernel modules into rootfs path\n$RESET"
-    mkdir -pv $rootfspath/usr/lib &> fulllogfile
+    mkdir -pv $rootfspath/usr/lib &>> fulllogfile
     cd $rootfspath
     ln -sv usr/lib lib &>> $fulllogfile
     cd $root/build/kernel/linux-*
