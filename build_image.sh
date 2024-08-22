@@ -68,9 +68,9 @@ kernel() {
     mkdir -p $build/kernel &>> $fulllogfile
     cd $build/kernel
     printf "$UGREEN** Extracting Linux Kernel\n$RESET"
-    tar -xvf $root/downloads/linux-*.tar.xz  &>> $fulllogfile
+    tar -xvf $root/downloads/linux-6.7.4.tar.xz  &>> $fulllogfile
     check $? "Extract Linux Kernel"
-    cd linux-*
+    cd linux-6.7.4
     printf "$UGREEN** Configuring Linux Kernel\n$RESET"
     make mrproper  &>> $fulllogfile
     cp -v $root/kernel/config-6.7.4 .config
@@ -86,14 +86,14 @@ kernel() {
 #----------- Build and Install kernel modules --------------
 kernel_modules() {
     printf "$UGREEN** Building Linux Kernel modules\n$RESET"
-    cd $build/kernel/linux-*
+    cd $build/kernel/linux-6.7.4
     make modules &>> fulllogfile
     check $? "Build Linux Kernel modules"
     printf "$UGREEN** Installing Linux Kernel modules into rootfs path\n$RESET"
     mkdir -pv $rootfspath/usr/lib &>> fulllogfile
     cd $rootfspath
     ln -sv usr/lib lib &>> $fulllogfile
-    cd $root/build/kernel/linux-*
+    cd $root/build/kernel/linux-6.7.4
     make INSTALL_MOD_PATH=$rootfspath modules_install &>> $fulllogfile
     check $? "Install Linux Kernel modules"
 } # kernel_modules
@@ -104,9 +104,9 @@ glibc() {
     printf "$UGREEN** Building glibc\n$RESET"
     mkdir -p $build/glibc &>> $fulllogfile
     cd $build/glibc
-    tar -xvf $root/downloads/glibc-*.tar.xz &>> $fulllogfile
+    tar -xvf $root/downloads/glibc-2.39.tar.xz &>> $fulllogfile
     check $? "Extract glibc"
-    cd glibc-*
+    cd glibc-2.39
     mkdir build
     cd build
     echo "rootsbindir=/usr/bin" > configparms
@@ -195,8 +195,8 @@ rootfs() {
     rm -rv $build/busybox &>> $fulllogfile
     mkdir -v $build/busybox &>> $fulllogfile
     cd $build/busybox
-    tar -xvjf $root/downloads/busybox-*.tar.bz2 &>> $fulllogfile
-    cd busybox-*
+    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
+    cd busybox-1.36.1
     cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
     printf "$UGREEN** Configuring busybox\n$RESET"
     make oldconfig &> $fulllogfile
@@ -210,7 +210,7 @@ rootfs() {
 
     glibc
     kernel
-    cp -v $root/build/kernel/linux-*/arch/x86/boot/bzImage $rootfspath/boot/vmlinuz-linux
+    cp -v $root/build/kernel/linux-6.7.4/arch/x86/boot/bzImage $rootfspath/boot/vmlinuz-linux
     kernel_modules
     initramfs
     cp -v $root/build/initramfs.img $rootfspath/boot/
