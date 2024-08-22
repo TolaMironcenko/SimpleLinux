@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. /etc/init.d/colors.sh
+. /etc/init.d/init-funcs
+
+case "$1" in
+    start)
+        printf "$UYELLOW** Setting up hostname\n$RESET"
+        /bin/hostname -F /etc/hostname
+        check $? "Set up hostname"
+        ;;
+    stop)
+        ;;
+    *)
+        echo "$0 init script usage: $0 {start}"
+        return 1
+esac
+return $?

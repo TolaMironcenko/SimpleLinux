@@ -73,8 +73,8 @@ kernel() {
     cd linux-6.7.4
     printf "$UGREEN** Configuring Linux Kernel\n$RESET"
     make mrproper  &>> $fulllogfile
-    cp -v $root/kernel/config-6.7.4 .config
-    make oldconfig
+    cp -v $root/kernel/config-6.7.4 .config &>> $fulllogfile
+    make oldconfig &>> $fulllogfile
     check $? "Configure Linux Kernel"
     printf "$UGREEN** Building Linux Kernel\n$RESET"
     make $makeflags  &>> $fulllogfile
@@ -191,6 +191,8 @@ rootfs() {
     cp -rv $root/rootfs/etc/* $rootfspath/etc/ &>> $fulllogfile
     cp -rv $root/rootfs/usr/* $rootfspath/usr/ &>> $fulllogfile
     cp -rv $root/rootfs/boot/* $rootfspath/boot/ &>> $fulllogfile
+    cd ..
+    ln -sv /proc/mounts etc/mtab &>> $fulllogfile
 
     rm -rv $build/busybox &>> $fulllogfile
     mkdir -v $build/busybox &>> $fulllogfile
@@ -210,8 +212,8 @@ rootfs() {
 
     glibc
     kernel
-    cp -v $root/build/kernel/linux-6.7.4/arch/x86/boot/bzImage $rootfspath/boot/vmlinuz-linux
-    kernel_modules
+    cp -v $root/build/kernel/linux-6.7.4/arch/x86/boot/bzImage $rootfspath/boot/vmlinuz-linux &>> $fulllogfile
+    kernel_modules &>> $fulllogfile
     initramfs
     cp -v $root/build/initramfs.img $rootfspath/boot/
 

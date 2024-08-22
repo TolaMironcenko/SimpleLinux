@@ -5,15 +5,15 @@
 
 case "$1" in
     start)
-        printf "$UYELLOW** Starting networking\n$RESET"
-        /sbin/ifup -a &> /dev/null
-        check $? "networking"
+        printf "$UYELLOW** Mounting virtual filesystems\n$RESET"
+        mount -t tmpfs tmpfs /var/run
+        check $? "Mount virtual filesystems"
         echo $! > /var/run/networking.pid
         ;;
     stop)
-        printf "$UYELLOW Stopping netowrking\n$RESET"
-        /sbin/ifdown -a
-        check $? "Stop networking"
+        printf "$UYELLOW Umounting virtual filesystems\n$RESET"
+        umount /var/run
+        check $? "Umount virtual filesystems"
         rm /var/run/networking.pid
         ;;
     restart|reload)
