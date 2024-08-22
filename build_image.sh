@@ -131,20 +131,9 @@ glibc() {
 }
 #-----------------------------------------------------------
 
-#------------------ Building initramfs.img ------------------------
-initramfs() {
-    printf "$UGREEN** Building initramfs\n$RESET"
-
-#--------- Creating directories and files -------------------
-    rm -r $initramfspath &>> $fulllogfile 
-    mkdir -p $initramfspath
-    cd $initramfspath
-    mkdir -p $(cat $initramfsfile)
-    cp $root/initramfs/init.in $initramfspath/init
-    chmod 755 $initramfspath/init
-#------------------------------------------------------------
-
-#------------ Building initramfs busybox and copy to initramfs directory --------------------
+#------------------ Building busybox for initramfs ----------------
+busybox_initramfs() {
+    printf "$UGREEN** Building busybox for initramfs\n$RESET"
     rm -r $build/busybox &>> $fulllogfile
     mkdir -p $build/busybox
     cd $build/busybox
@@ -159,7 +148,25 @@ initramfs() {
     printf "$UGREEN** Building busybox\n$RESET"
     make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &> $fulllogfile
     check $? "Build busybox all logs in .log"
-    cp busybox $initramfspath/bin
+}
+#------------------------------------------------------------------
+
+#------------------ Building initramfs.img ------------------------
+initramfs() {
+    printf "$UGREEN** Building initramfs\n$RESET"
+
+#--------- Creating directories and files -------------------
+    rm -r $initramfspath &>> $fulllogfile 
+    mkdir -p $initramfspath
+    cd $initramfspath
+    mkdir -p $(cat $initramfsfile)
+    cp $root/initramfs/init.in $initramfspath/init
+    chmod 755 $initramfspath/init
+#------------------------------------------------------------
+
+#------------ Building initramfs busybox and copy to initramfs directory --------------------
+    busybox_initramfs
+    cp $build/busybox/busybox-1.36.1/busybox $initramfspath/bin
     cd $initramfspath/bin
     for i in $(./busybox --list); do ln -s busybox $i; done
     cd ..
@@ -173,6 +180,24 @@ initramfs() {
 
 } # initramfs
 #------------------------------------------------------------------
+
+#----------- Building busybox for rootfs ----------
+busybox_rootfs() {
+    printf "$UGREEN** Building busybox for rootfs\n$RESET"
+    rm -rv $build/busybox &>> $fulllogfile
+    mkdir -v $build/busybox &>> $fulllogfile
+    cd $build/busybox
+    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
+    cd busybox-1.36.1
+    cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
+    printf "$UGREEN** Configuring busybox\n$RESET"
+    make oldconfig &> $fulllogfile
+    check $? "Configure busybox all logs in .log"
+    printf "$UGREEN** Building busybox\n$RESET"
+    make $makeflags &> $fulllogfile
+    check $? "Build busybox all logs in .log"
+}
+#--------------------------------------------------
 
 #----------- Building rootfs ----------------------
 rootfs() {
@@ -194,19 +219,8 @@ rootfs() {
     cd ..
     ln -sv /proc/mounts etc/mtab &>> $fulllogfile
 
-    rm -rv $build/busybox &>> $fulllogfile
-    mkdir -v $build/busybox &>> $fulllogfile
-    cd $build/busybox
-    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
-    cd busybox-1.36.1
-    cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
-    printf "$UGREEN** Configuring busybox\n$RESET"
-    make oldconfig &> $fulllogfile
-    check $? "Configure busybox all logs in .log"
-    printf "$UGREEN** Building busybox\n$RESET"
-    make $makeflags &> $fulllogfile
-    check $? "Build busybox all logs in .log"
-    cp -v busybox $rootfspath/usr/bin &>> $fulllogfile
+    busybox_rootfs
+    cp -v $build/busybox/busybox-1.36.1/busybox $rootfspath/usr/bin &>> $fulllogfile
     cd $rootfspath/usr/bin
     for i in $(./busybox --list); do ln -s busybox $i; done
 
