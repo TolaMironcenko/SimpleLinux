@@ -227,8 +227,11 @@ rootfs() {
 clean() {
     printf "$UGREEN** Cleaning build and out directories\n$RESET"
     rm -rv $root/.log/* &>> $fulllogfile
+    mkdir $root/.log
     rm -rv $out &>> $fulllogfile
+    mkdir $out
     rm -rv $build &>> $fulllogfile
+    mkdir $build
     printf "$UGREEN** SUCCESS: Cleaning build and out directories\n$RESET"
 } # clean
 #-----------------------------------------------------
