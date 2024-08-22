@@ -72,7 +72,9 @@ kernel() {
     check $? "Extract Linux Kernel"
     cd linux-*
     printf "$UGREEN** Configuring Linux Kernel\n$RESET"
-    make defconfig  &>> $fulllogfile
+    make mrproper  &>> $fulllogfile
+    cp -v $root/kernel/config-6.7.4 .config
+    make oldconfig
     check $? "Configure Linux Kernel"
     printf "$UGREEN** Building Linux Kernel\n$RESET"
     make $makeflags  &>> $fulllogfile
@@ -197,10 +199,10 @@ rootfs() {
     cd busybox-*
     cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
     printf "$UGREEN** Configuring busybox\n$RESET"
-    make oldconfig &> $root/.log/busybox-configure.log
+    make oldconfig &> $fulllogfile
     check $? "Configure busybox all logs in .log"
     printf "$UGREEN** Building busybox\n$RESET"
-    make $makeflags &> $root/.log/busybox-build.log
+    make $makeflags &> $fulllogfile
     check $? "Build busybox all logs in .log"
     cp -v busybox $rootfspath/usr/bin &>> $fulllogfile
     cd $rootfspath/usr/bin

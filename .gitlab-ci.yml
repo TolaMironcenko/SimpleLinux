@@ -1,0 +1,36 @@
+image: ubuntu:18.04
+
+stages:
+  - build
+
+# needed environment variables
+variables:
+  IMAGE_NAME: SimpleLinux
+  IMAGE_VERSION: 0.0.1
+
+build-wimic-image:
+  stage: build
+
+  artifacts:
+    # artifacts archive name
+    name: "$IMAGE_NAME-$IMAGE_VERSION-$CI_COMMIT_BRANCH-$CI_PIPELINE_ID"
+
+    # artifacts path
+    paths:
+      - artifacts
+
+  # update environments and install needed packages
+  before_script:
+    - echo "Hello, $GITLAB_USER_LOGIN"
+    - ./install_deps.sh
+    - uname -a
+
+  # script for building artifacts
+  script:
+    - ./build-image.sh
+
+  # installing artifacts to artifacts directory
+  after_script:
+    - rm -rvf artifacts
+    - mkdir -v artifacts
+    - cp -v build/SimpleLinux.iso artifacts/$IMAGE_NAME-$IMAGE_VERSION-$CI_COMMIT_BRANCH-$CI_PIPELINE_ID.iso
