@@ -131,7 +131,7 @@ glibc() {
 }
 #-----------------------------------------------------------
 
-#------------------ Building busybox for initramfs ----------------
+# #------------------ Building busybox for initramfs ----------------
 busybox_initramfs() {
     printf "$UGREEN** Building busybox for initramfs\n$RESET"
     rm -r $build/busybox &>> $fulllogfile
@@ -149,6 +149,37 @@ busybox_initramfs() {
     make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &> $fulllogfile
     check $? "Build busybox all logs in .log"
 }
+# #------------------------------------------------------------------
+
+# #----------- Building busybox for rootfs ----------
+busybox_rootfs() {
+    printf "$UGREEN** Building busybox for rootfs\n$RESET"
+    rm -rv $build/busybox &>> $fulllogfile
+    mkdir -v $build/busybox &>> $fulllogfile
+    cd $build/busybox
+    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
+    cd busybox-1.36.1
+    cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
+    printf "$UGREEN** Configuring busybox\n$RESET"
+    make oldconfig &>> $fulllogfile
+    check $? "Configure busybox all logs in .log"
+    printf "$UGREEN** Building busybox\n$RESET"
+    make $makeflags &>> $fulllogfile
+    check $? "Build busybox all logs in .log"
+}
+#--------------------------------------------------
+
+#------------------ Building busybox ------------------------------
+busybox() {
+    case "$1" in
+        initramfs)
+            busybox_initramfs
+            ;;
+        rootfs)
+            busybox_rootfs
+            ;;
+    esac
+}
 #------------------------------------------------------------------
 
 #------------------ Building initramfs.img ------------------------
@@ -165,7 +196,7 @@ initramfs() {
 #------------------------------------------------------------
 
 #------------ Building initramfs busybox and copy to initramfs directory --------------------
-    busybox_initramfs
+    busybox initramfs
     cp $build/busybox/busybox-1.36.1/busybox $initramfspath/bin
     cd $initramfspath/bin
     for i in $(./busybox --list); do ln -s busybox $i; done
@@ -180,24 +211,6 @@ initramfs() {
 
 } # initramfs
 #------------------------------------------------------------------
-
-#----------- Building busybox for rootfs ----------
-busybox_rootfs() {
-    printf "$UGREEN** Building busybox for rootfs\n$RESET"
-    rm -rv $build/busybox &>> $fulllogfile
-    mkdir -v $build/busybox &>> $fulllogfile
-    cd $build/busybox
-    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
-    cd busybox-1.36.1
-    cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
-    printf "$UGREEN** Configuring busybox\n$RESET"
-    make oldconfig &> $fulllogfile
-    check $? "Configure busybox all logs in .log"
-    printf "$UGREEN** Building busybox\n$RESET"
-    make $makeflags &> $fulllogfile
-    check $? "Build busybox all logs in .log"
-}
-#--------------------------------------------------
 
 #----------- Building rootfs ----------------------
 rootfs() {
@@ -219,7 +232,7 @@ rootfs() {
     cd ..
     ln -sv /proc/mounts etc/mtab &>> $fulllogfile
 
-    busybox_rootfs
+    busybox rootfs
     cp -v $build/busybox/busybox-1.36.1/busybox $rootfspath/usr/bin &>> $fulllogfile
     cd $rootfspath/usr/bin
     for i in $(./busybox --list); do ln -s busybox $i; done
@@ -254,7 +267,17 @@ clean() {
 
 #------------- grub rescue ---------------------------
 grub_rescue() {
-    grub-mkrescue -o $build/simplelinux.iso $rootfspath
+    grub-mkrescue -o $build/simplelinux.iso $rootfspath &>> $fulllogfile
+    check $? "Build grub-rescue"
+    cp -v $build/simplelinux.iso $out/ &>> $fulllogfile
+}
+#-----------------------------------------------------
+
+#------------------ rootfs archive -------------------
+rootfs_archive() {
+    cd $rootfspath
+    tar -czvf $out/simplelinux-$version-rootfs.tar.gz . &>> $fulllogfile
+    check $? "Build rootfs archive"
 }
 #-----------------------------------------------------
 
@@ -270,3 +293,4 @@ download_sources
 # initramfs
 rootfs
 grub_rescue
+rootfs_archive
