@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #--- Import colors ---
-. ./colors.sh
+. ./scripts/colors.sh
 #---------------------
 
 #------- Check errors func -----------------
