@@ -13,3 +13,12 @@ check() {
     printf "$UGREEN** SUCCESS: $2\n$RESET" 
 }
 #-------------------------------------------
+
+#------- Check root func -------------------
+check_root() {
+    if [ $(id -u) -ne 0 ]; then
+        printf "$URED** You are not root\n$RESET"
+        exit 1
+    fi
+}
+#-------------------------------------------

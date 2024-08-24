@@ -1,7 +1,7 @@
 #!/bin/sh
 
-. /etc/init.d/colors.sh
-. /etc/init.d/init-funcs
+. /etc/init.d/funcs/colors.sh
+. /etc/init.d/funcs/init-funcs
 
 case "$1" in
     start)

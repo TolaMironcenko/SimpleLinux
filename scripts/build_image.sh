@@ -22,48 +22,23 @@ version=0.0.1 # script version
 #--- import funcs ----
 . ./scripts/funcs.sh
 #---------------------
-
-#------------ config ------------------
-root=$(pwd)                                 # root build directory
-disk="sdz"                                  # disk to write install image
-distro_name="Simple"                        # distro name
-distro_desc="Simple linux distro"           # distro desctiption
-distro_codename="zero_zero_one"             # distro codename
-hyperv_support="false"                      # hyperv support for kernel image
-out=$root/out                               # output directory
-build=$root/build                           # build directory
-sourcesfilename=sources.txt                 # sources file for downloading
-initramfsfile=$root/initramfs/initramfs.txt # file to created directories for initramfs
-initramfspath=$build/initramfs              # initramfs build directory
-rootfsfile=$root/rootfs/rootfs.txt          # file to created directories for rootfs
-rootfspath=$build/rootfs                    # rootfs build directory
-fulllogfile=$root/.log/fulllog.log          # file for full build logs
-makeflags=-j16                              # makeflags
-#--------------------------------------
-
+#----- import config variables ----------
+. ./scripts/config.sh
+#----------------------------------------
 #----- import busybox build funcs ---
 . ./scripts/busybox.sh
 #------------------------------------
 
 #-------- check root ------------------
-if [ $(id -u) -ne 0 ]; then
-    printf "$URED** You are not root\n$RESET"
-    exit 1
-fi
+check_root
 #--------------------------------------
 
 mkdir $out &>> $fulllogfile
 mkdir $root/.log &>> $fulllogfile
 
-#------------ Download needed sources from sources.txt ------------------
-download_sources() {
-    printf "$UGREEN** Downloading sources\n$RESET"
-    cat $sourcesfilename
-    if [ ! -d downloads ]; then mkdir downloads; fi
-    wget --input-file=$sourcesfilename --continue --directory-prefix=$root/downloads
-    check $? "Download sources"
-}
-#------------------------------------------------------------------------
+#--------- import Download sources funcs ------
+. ./scripts/download.sh
+#----------------------------------------------
 
 #--------------- Building Linux Kernel ---------------------
 kernel() {
@@ -103,88 +78,9 @@ kernel_modules() {
 } # kernel_modules
 #-----------------------------------------------------------
 
-#------------ glibc ----------------------------------------
-glibc() {
-    printf "$UGREEN** Building glibc\n$RESET"
-    mkdir -p $build/glibc &>> $fulllogfile
-    cd $build/glibc
-    tar -xvf $root/downloads/glibc-2.39.tar.xz &>> $fulllogfile
-    check $? "Extract glibc"
-    cd glibc-2.39
-    mkdir build
-    cd build
-    echo "rootsbindir=/usr/bin" > configparms
-    ../configure \
-        --prefix=/usr \
-        --disable-werror \
-        --enable-kernel=4.19 \
-        --enable-stack-protector=strong \
-        --disable-nscd \
-        libc_cv_slibdir=/usr/lib &>> $fulllogfile
-    check $? "Configure glibc"
-    make $makeflags &>> $fulllogfile
-    check $? "Build glibc"
-    make DESTDIR=$rootfspath install &>> $fulllogfile
-    check $? "Install glibc to rootfs"
-    cd $rootfspath
-    find -name \*.a -delete &>> $fulllogfile
-    strip --strip-unneeded $rootfspath/usr/lib/* $rootfspath/usr/bin/* &>> $fulllogfile
-    chroot $rootfspath /bin/sh -c "mkdir -p /usr/lib/locale;localedef -i C -f UTF-8 C.UTF-8;localedef -i en_US -f UTF-8 en_US.UTF-8;localedef -i ru_RU -f UTF-8 ru_RU-UTF-8;"
-    cd $root
-    check $? "Build and install glibc"
-}
-#-----------------------------------------------------------
-
-# #------------------ Building busybox for initramfs ----------------
-# busybox_initramfs() {
-#     printf "$UGREEN** Building busybox for initramfs\n$RESET"
-#     rm -r $build/busybox &>> $fulllogfile
-#     mkdir -p $build/busybox
-#     cd $build/busybox
-#     tar -xjf $root/downloads/busybox-1.36.1.tar.bz2
-#     check $? "Extract busybox"
-#     cd busybox-1.36.1
-#     cp $root/busybox/busybox-initramfs-config .config
-#     export PATH=$PATH:/opt/toolchains/x86_64-buildroot-linux-uclibc-gcc/bin
-#     printf "$UGREEN** Configuring busybox\n$RESET"
-#     make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- oldconfig &> $fulllogfile
-#     check $? "Configure busybox all logs in .log"
-#     printf "$UGREEN** Building busybox\n$RESET"
-#     make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &> $fulllogfile
-#     check $? "Build busybox all logs in .log"
-# }
-# # #------------------------------------------------------------------
-
-# # #----------- Building busybox for rootfs ----------
-# busybox_rootfs() {
-#     printf "$UGREEN** Building busybox for rootfs\n$RESET"
-#     rm -rv $build/busybox &>> $fulllogfile
-#     mkdir -v $build/busybox &>> $fulllogfile
-#     cd $build/busybox
-#     tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
-#     cd busybox-1.36.1
-#     cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
-#     printf "$UGREEN** Configuring busybox\n$RESET"
-#     make oldconfig &>> $fulllogfile
-#     check $? "Configure busybox all logs in .log"
-#     printf "$UGREEN** Building busybox\n$RESET"
-#     make $makeflags &>> $fulllogfile
-#     check $? "Build busybox all logs in .log"
-# }
-# #--------------------------------------------------
-
-# #------------------ Building busybox ------------------------------
-# busybox() {
-#     case "$1" in
-#         initramfs)
-#             busybox_initramfs
-#             ;;
-#         rootfs)
-#             busybox_rootfs
-#             ;;
-#     esac
-# }
-#------------------------------------------------------------------
+#-------- import build glibc funcs ------------
+. ./scripts/glibc.sh
+#----------------------------------------------
 
 #------------------ Building initramfs.img ------------------------
 initramfs() {
@@ -244,9 +140,9 @@ rootfs() {
     glibc
     kernel
     cp -v $root/build/kernel/linux-6.7.4/arch/x86/boot/bzImage $rootfspath/boot/vmlinuz-linux &>> $fulllogfile
-    kernel_modules &>> $fulllogfile
+    kernel_modules
     initramfs
-    cp -v $root/build/initramfs.img $rootfspath/boot/
+    cp -v $root/build/initramfs.img $rootfspath/boot/ &>> $fulllogfile
 
     chmod 640 $rootfspath/etc/shadow $rootfspath/etc/inittab
     chmod 755 $rootfspath/etc/init.d/* $rootfspath/usr/share/udhcpc/default.script
@@ -256,45 +152,36 @@ rootfs() {
 } # rootfs
 #--------------------------------------------------
 
-#---------- Cleaning build and out directory ---------
-clean() {
-    printf "$UGREEN** Cleaning build and out directories\n$RESET"
-    rm -rv $root/.log/* &>> $fulllogfile
-    mkdir -p $root/.log
-    rm -rv $out &>> $fulllogfile
-    mkdir -p $out
-    rm -rv $build &>> $fulllogfile
-    mkdir -p $build
-    printf "$UGREEN** SUCCESS: Cleaning build and out directories\n$RESET"
-} # clean
-#-----------------------------------------------------
-
-#------------- grub rescue ---------------------------
-grub_rescue() {
-    grub-mkrescue -o $build/simplelinux.iso $rootfspath &>> $fulllogfile
-    check $? "Build grub-rescue"
-    cp -v $build/simplelinux.iso $out/ &>> $fulllogfile
-}
-#-----------------------------------------------------
-
-#------------------ rootfs archive -------------------
-rootfs_archive() {
-    cd $rootfspath
-    tar -czvf $out/simplelinux-$version-rootfs.tar.gz . &>> $fulllogfile
-    check $? "Build rootfs archive"
-}
-#-----------------------------------------------------
+#----------- import cleaning funcs -------------
+. ./scripts/clean.sh
+#-----------------------------------------------
+#-------- import build artifacts funcs ---------
+. ./scripts/artifacts.sh
+#-----------------------------------------------
 
 if [ "$1" = "clean" ]; then
     clean
     exit 0
 fi
 
-clean
-download_sources
-# kernel
-# kernel_modules
-# initramfs
-rootfs
-grub_rescue
-rootfs_archive
+case "$1" in
+    clean)
+        clean
+        ;;
+    build)
+        clean
+        download_sources
+        rootfs
+        grub_rescue
+        rootfs_archive
+        ;;
+    download)
+        download_sources
+        ;;
+    rootfs)
+        rootfs
+        ;;
+    *)
+        printf "$UYELLOW** $0 script using: $0 {clean|build|download|rootfs}\n$RESET"
+        exit 1
+esac

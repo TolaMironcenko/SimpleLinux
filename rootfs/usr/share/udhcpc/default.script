@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. /etc/init.d/colors.sh
+. /etc/init.d/funcs/colors.sh
 
 [ -z "$1" ] && printf "$URED** ERROR: should be called from udhcpc\n$RESET" && exit 1
 RESOLF_CONF="/etc/resolv.conf"
