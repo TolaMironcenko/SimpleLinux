@@ -5,7 +5,19 @@
 ## To start build 
 
 ```shell
-sudo ./build_image.sh
+sudo ./scripts/build_image.sh build
+```
+
+### or
+
+```shell
+sudo make
+```
+
+### or
+
+```shell
+sudo make build
 ```
 
 ## Using for building initramfs

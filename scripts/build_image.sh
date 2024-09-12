@@ -59,21 +59,20 @@ mkdir $root/.log &>> $fulllogfile
 . ./scripts/artifacts.sh
 #-----------------------------------------------
 
-if [ "$1" = "clean" ]; then
+buid_image() {
     clean
-    exit 0
-fi
+    download_sources
+    rootfs
+    grub_rescue
+    rootfs_archive
+}
 
 case "$1" in
     clean)
         clean
         ;;
     build)
-        clean
-        download_sources
-        rootfs
-        grub_rescue
-        rootfs_archive
+        buid_image
         ;;
     download)
         download_sources
