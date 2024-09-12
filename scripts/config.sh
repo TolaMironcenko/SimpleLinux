@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #------------ config ------------------
+version=0.0.1                               # script version
 root=$(pwd)                                 # root build directory
 disk="sdz"                                  # disk to write install image
 distro_name="Simple"                        # distro name

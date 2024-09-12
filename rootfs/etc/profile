@@ -8,3 +8,4 @@ export PS1="$BLUE**$BLUE \u$RESET@$RED\h: $GREEN\w $YELLOW\$(date +%d.%m.%Y) \t\
 
 [ $(id -u) -eq 0 ] && export PS1="$RED** \u@\h: \w \$(date +%d.%m.%Y) \t\n\\\$ $RESET"
 
+[ -f ~/.profile ] && source ~/.profile
