@@ -27,7 +27,7 @@ build-iso-image:
 
   # script for building artifacts
   script:
-    - ./scripts/build_image.sh
+    - ./scripts/build_image.sh build
 
   # installing artifacts to artifacts directory
   after_script:
