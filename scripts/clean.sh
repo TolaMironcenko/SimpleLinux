@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #---------- Cleaning build and out directory ---------
 clean() {

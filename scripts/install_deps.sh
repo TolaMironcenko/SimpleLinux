@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #---- System update ----
 apt update -qq && 
