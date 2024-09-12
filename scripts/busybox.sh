@@ -10,7 +10,7 @@
 #------------------ Building busybox for initramfs ----------------
 busybox_initramfs() {
     printf "$UGREEN** Building busybox for initramfs\n$RESET"
-    rm -r $build/busybox &>> $fulllogfile >> $(tty)
+    rm -r $build/busybox &>> $fulllogfile
     mkdir -p $build/busybox
     cd $build/busybox
     tar -xjf $root/downloads/busybox-1.36.1.tar.bz2
@@ -19,10 +19,10 @@ busybox_initramfs() {
     cp $root/busybox/busybox-initramfs-config .config
     export PATH=$PATH:/opt/toolchains/x86_64-buildroot-linux-uclibc-gcc/bin
     printf "$UGREEN** Configuring busybox\n$RESET"
-    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- oldconfig &>> $fulllogfile >> $(tty)
+    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- oldconfig &>> $fulllogfile
     check $? "Configure busybox all logs in .log"
     printf "$UGREEN** Building busybox\n$RESET"
-    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &>> $fulllogfile >> $(tty)
+    make CROSS_COMPILE=x86_64-buildroot-linux-uclibc- $makeflags &>> $fulllogfile
     check $? "Build busybox all logs in .log"
 }
 #------------------------------------------------------------------
@@ -30,17 +30,17 @@ busybox_initramfs() {
 #----------- Building busybox for rootfs ----------
 busybox_rootfs() {
     printf "$UGREEN** Building busybox for rootfs\n$RESET"
-    rm -rv $build/busybox &>> $fulllogfile >> $(tty)
-    mkdir -v $build/busybox &>> $fulllogfile >> $(tty)
+    rm -rv $build/busybox &>> $fulllogfile
+    mkdir -v $build/busybox &>> $fulllogfile
     cd $build/busybox
-    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile >> $(tty)
+    tar -xvjf $root/downloads/busybox-1.36.1.tar.bz2 &>> $fulllogfile
     cd busybox-1.36.1
-    cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile >> $(tty)
+    cp -v $root/busybox/busybox-rootfs-config .config &>> $fulllogfile
     printf "$UGREEN** Configuring busybox\n$RESET"
-    make oldconfig &>> $fulllogfile >> $(tty)
+    make oldconfig &>> $fulllogfile
     check $? "Configure busybox all logs in .log"
     printf "$UGREEN** Building busybox\n$RESET"
-    make $makeflags &>> $fulllogfile >> $(tty)
+    make $makeflags &>> $fulllogfile
     check $? "Build busybox all logs in .log"
 }
 #--------------------------------------------------
