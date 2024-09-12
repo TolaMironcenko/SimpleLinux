@@ -5,7 +5,7 @@ initramfs() {
     printf "$UGREEN** Building initramfs\n$RESET"
 
 #--------- Creating directories and files -------------------
-    rm -r $initramfspath &>> $fulllogfile 
+    rm -r $initramfspath &>> $fulllogfile  >> $(tty)
     mkdir -p $initramfspath
     cd $initramfspath
     mkdir -p $(cat $initramfsfile)

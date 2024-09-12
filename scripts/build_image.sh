@@ -29,8 +29,8 @@
 check_root
 #--------------------------------------
 
-mkdir $out &>> $fulllogfile
-mkdir $root/.log &>> $fulllogfile
+mkdir $out &>> $fulllogfile >> $(tty)
+mkdir $root/.log &>> $fulllogfile >> $(tty)
 
 #--------- import Download sources funcs ------
 . ./scripts/download.sh
