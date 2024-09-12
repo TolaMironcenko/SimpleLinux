@@ -5,13 +5,13 @@
 
 case "$1" in
     start)
-        printf "$UYELLOW** Starting networking\n$RESET"
+        printf "$BBLUE**$BYELLOW Starting networking\n$RESET"
         /sbin/ifup -a &> /dev/null
         check $? "networking"
         echo $! > /var/run/networking.pid
         ;;
     stop)
-        printf "$UYELLOW Stopping netowrking\n$RESET"
+        printf "$BBLUE**$BYELLOW Stopping netowrking\n$RESET"
         /sbin/ifdown -a
         check $? "Stop networking"
         if [ -f /var/run/networking.pid ]; then

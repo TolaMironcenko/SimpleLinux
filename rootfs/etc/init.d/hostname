@@ -5,7 +5,7 @@
 
 case "$1" in
     start)
-        printf "$UYELLOW** Setting up hostname\n$RESET"
+        printf "$BBLUE**$BYELLOW Setting up hostname\n$RESET"
         /bin/hostname -F /etc/hostname
         check $? "Set up hostname"
         ;;

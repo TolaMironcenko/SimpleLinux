@@ -36,9 +36,9 @@ rc() {
 #---------- check status function -----------
 check() {
     if [ $1 -ne 0 ]; then
-        printf "$URED** ERROR: $2\n$RESET"
+        printf "$BBLUE**$BRED ERROR: $2\n$RESET"
         return
     fi
-    printf "$UGREEN** SUCCESS: $2\n$RESET"
+    printf "$BBLUE**$BGREEN SUCCESS: $2\n$RESET"
 }
 #--------------------------------------------

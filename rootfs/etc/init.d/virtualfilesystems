@@ -5,13 +5,13 @@
 
 case "$1" in
     start)
-        printf "$UYELLOW** Mounting virtual filesystems\n$RESET"
+        printf "$BBLUE**$BYELLOW Mounting virtual filesystems\n$RESET"
         mount -t tmpfs tmpfs /var/run
         check $? "Mount virtual filesystems"
         echo $! > /var/run/networking.pid
         ;;
     stop)
-        printf "$UYELLOW Umounting virtual filesystems\n$RESET"
+        printf "$BBLUE**$BYELLOW Umounting virtual filesystems\n$RESET"
         umount /var/run
         check $? "Umount virtual filesystems"
         rm /var/run/networking.pid
