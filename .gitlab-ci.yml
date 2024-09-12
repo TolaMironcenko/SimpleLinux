@@ -34,3 +34,4 @@ build-iso-image:
     - rm -rvf artifacts
     - mkdir -v artifacts
     - cp -v build/simplelinux.iso artifacts/$IMAGE_NAME-$IMAGE_VERSION-$CI_COMMIT_BRANCH-$CI_PIPELINE_ID.iso
+    - cp -v .log/fulllog.log actifacts/fulllog
