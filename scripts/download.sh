@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #------------ Download needed sources from sources.txt ------------------
 download_sources() {

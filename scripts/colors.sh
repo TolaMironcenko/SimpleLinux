@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #--- reset colors ---
 RESET="\033[0m"

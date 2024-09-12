@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #------------ config ------------------
 version=0.0.1                               # script version

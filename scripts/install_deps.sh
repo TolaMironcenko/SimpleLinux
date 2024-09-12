@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #---- System update ----
 apt update -qq && 
@@ -7,7 +7,7 @@ apt upgrade -y -qq &&
 
 #-------------- Nodejs ---------------------------------------------
 apt install -y curl
-# curl -sL https://deb.nodesource.com/setup_6.x | bash - &&
+# curl -sL https://deb.nodesource.com/setup_6.x | sh - &&
 apt install -y --force-yes -qq build-essential make cmake u-boot-tools bc file wget &&
 #-------------------------------------------------------------------
 

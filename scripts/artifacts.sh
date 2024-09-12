@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #------------- grub rescue ---------------------------
 grub_rescue() {
