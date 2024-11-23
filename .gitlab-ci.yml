@@ -7,7 +7,7 @@ variables:
   IMAGE_VERSION: 0.0.1
 
 build-iso-image:
-  image: ubuntu:18.04
+  #image: ubuntu:18.04
   stage: build
 
   artifacts:
