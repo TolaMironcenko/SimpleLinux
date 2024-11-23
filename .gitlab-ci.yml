@@ -24,6 +24,7 @@ build-iso-image:
     - echo "Hello, $GITLAB_USER_LOGIN"
     - make build_image 
     - uname -a
+    - apt update && apt upgrade -y && apt install build-essential bc file
 
   # script for building artifacts
   script:
