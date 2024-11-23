@@ -22,7 +22,7 @@ build-iso-image:
   # update environments and install needed packages
   before_script:
     - echo "Hello, $GITLAB_USER_LOGIN"
-    - ./scripts/install_deps.sh
+    - make build_image 
     - uname -a
 
   # script for building artifacts
