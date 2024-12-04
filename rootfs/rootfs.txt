@@ -27,3 +27,4 @@ usr/src
 var
 var/log
 var/run
+tmp

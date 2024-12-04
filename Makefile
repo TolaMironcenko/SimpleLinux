@@ -1,13 +1,19 @@
 default: build_image
 
 build_image:
-	@sudo ./scripts/build_image.sh build
+	./scripts/build_image.sh build
+
+source:
+	./scripts/build_image.sh download
+
+download:
+	./scripts/build_image.sh download
 
 clean:
-	@sudo ./scripts/build_image.sh clean
+	./scripts/clean.sh
 
-download_sources:
-	@sudo ./scripts/build_image.sh download
-
-build_rootfs:
-	@sudo ./scripts/build_image.sh rootfs
+distclean:
+	./scripts/clean.sh
+	if [ -d downloads ]; then \
+		rm -rv downloads; \
+	fi

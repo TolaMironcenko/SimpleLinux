@@ -1,84 +1,26 @@
 #!/bin/sh
 
-#--------------------------------- Logo ---------------------------------------------------------------------
-# #######   ##   ##      ##   #######   ##        #######   |  ##        ##   ##    ##   ##    ##   ##  ##  |
-# ##        ##   ####  ####   ##   ##   ##        ##        |  ##        ##   ##    ##   ##    ##   ##  ##  |
-# ##             ##  ##  ##   ##   ##   ##        ##        |  ##             ##    ##   ##    ##   ##  ##  |
-# ##        ##   ##  ##  ##   ##   ##   ##        ##        |  ##        ##   ###   ##   ##    ##     ##    |
-# #######   ##   ##      ##   #######   ##        #######   |  ##        ##   ####  ##   ##    ##     ##    |
-#      ##   ##   ##      ##   ##        ##        ##        |  ##        ##   ##  ####   ##    ##     ##    |
-#      ##   ##   ##      ##   ##        ##        ##        |  ##        ##   ##   ###   ##    ##   ##  ##  |
-#      ##   ##   ##      ##   ##        ##        ##        |  ##        ##   ##    ##   ##    ##   ##  ##  |
-# #######   ##   ##      ##   ##        #######   #######   |  #######   ##   ##    ##   ########   ##  ##  |
-#------------------------------------------------------------------------------------------------------------
-
-#--- import rolors ---
 . ./scripts/colors.sh
-#---------------------
-#--- import funcs ----
-. ./scripts/funcs.sh
-#---------------------
-#----- import config variables ----------
 . ./scripts/config.sh
-#----------------------------------------
-#----- import busybox build funcs ---
-. ./scripts/busybox.sh
-#------------------------------------
-
-#-------- check root ------------------
-check_root
-#--------------------------------------
-
-mkdir $out &>> $fulllogfile
-mkdir $root/.log &>> $fulllogfile
-
-#--------- import Download sources funcs ------
+. ./scripts/funcs.sh
 . ./scripts/download.sh
-#----------------------------------------------
-
-#---------- import build kernel funcs ---------
+. ./scripts/busybox.sh
 . ./scripts/kernel.sh
-#----------------------------------------------
-
-#-------- import build glibc funcs ------------
-. ./scripts/glibc.sh
-#----------------------------------------------
-
-#-------- import build initramfs funcs --------
-. ./scripts/initramfs.sh
-#----------------------------------------------
-
-#----------- import build rootfs funcs --------
 . ./scripts/rootfs.sh
-#----------------------------------------------
+. ./scripts/uboot.sh
+. ./scripts/sdroot.sh
 
-#----------- import cleaning funcs -------------
-. ./scripts/clean.sh
-#-----------------------------------------------
-#-------- import build artifacts funcs ---------
-. ./scripts/artifacts.sh
-#-----------------------------------------------
-
-buid_image() {
-    clean
-    download_sources
-    rootfs
-    grub_rescue
-    rootfs_archive
-}
-
-case "$1" in
-    clean)
-        clean
-        ;;
+case $1 in
     build)
-        buid_image
+        rootfs
+        sdroot
+        # kernel_with_rootfs
+        # uboot
+        # busybox_rootfs
+        # kernel
         ;;
     download)
         download_sources
-        ;;
-    rootfs)
-        rootfs
         ;;
     *)
         printf "$UYELLOW** $0 script using: $0 {clean|build|download|rootfs}\n$RESET"

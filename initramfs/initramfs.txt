@@ -1,6 +1,0 @@
-bin
-dev
-mnt
-proc
-root
-sys

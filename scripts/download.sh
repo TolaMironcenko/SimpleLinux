@@ -1,5 +1,8 @@
 #!/bin/sh
 
+. ./scripts/funcs.sh
+. ./scripts/config.sh
+
 #------------ Download needed sources from sources.txt ------------------
 download_sources() {
     printf "$UGREEN** Downloading sources\n$RESET"
