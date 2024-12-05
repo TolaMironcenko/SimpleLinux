@@ -6,6 +6,7 @@
 . ./scripts/busybox.sh
 . ./scripts/uclibc.sh
 . ./scripts/kernel.sh
+. ./scripts/zlib.sh
 
 #----------- Building rootfs ----------------------
 rootfs() {
@@ -35,6 +36,7 @@ rootfs() {
     uclibc
     kernel
     kernel_modules
+    zlib
 
     chmod 640 $rootfspath/etc/shadow $rootfspath/etc/inittab
     chmod 755 $rootfspath/etc/init.d/* $rootfspath/usr/share/udhcpc/default.script $rootfspath/init
