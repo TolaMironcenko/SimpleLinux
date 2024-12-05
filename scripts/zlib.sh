@@ -17,6 +17,6 @@ zlib() {
     check $? "Build zlib"
     make DESTDIR=$rootfspath install
     rm -rv $rootfspath/usr/include $rootfspath/usr/share/man $rootfspath/usr/lib/{pkgconfig,libz.a}
-    ${CROSS_COMPILE}-strip $rootfspath/usr/lib/libz.so.1.3.1
+    ${CROSS_COMPILE}-strip --strip-unneeded $rootfspath/usr/lib/libz.so.1.3.1
     check $? "Installing to rootfs zlib"
 }

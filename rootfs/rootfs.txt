@@ -14,6 +14,7 @@ opt
 proc
 root
 srv
+srv/ftp
 sys
 usr
 usr/bin

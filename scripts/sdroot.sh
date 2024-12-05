@@ -24,12 +24,12 @@ sdroot() {
     uboot
     printf "$GREEN** Creating rootfs.ext4\n$RESET"
     cd $out
-    rawsdrootsize=$(du -sh $sdroot)
+    rawsdrootsize=$(du -s $sdroot)
     echo $rawsdrootsize
-    sdrootsize=(${rawsdrootsize//./ })
+    sdrootsize=(${rawsdrootsize// / })
     echo $sdrootsize
     echo $(($sdrootsize+2))
-    dd if=/dev/zero of=rootfs.ext4 bs=1M count=$(($sdrootsize+3))
+    dd if=/dev/zero of=rootfs.ext4 bs=1K count=$(($sdrootsize+3000))
     check $? "Write zero rootfs.ext4"
     mkfs.ext4 rootfs.ext4
     check $? "Creating ext4 filesystem"
@@ -73,12 +73,12 @@ sdroot_usable() {
     uboot
     printf "$GREEN** Creating rootfs.ext4\n$RESET"
     cd $out
-    rawsdrootsize=$(du -sh $sdroot)
+    rawsdrootsize=$(du -s $sdroot)
     echo $rawsdrootsize
-    sdrootsize=(${rawsdrootsize//M/ })
+    sdrootsize=(${rawsdrootsize// / })
     echo $sdrootsize
     echo $(($sdrootsize+2))
-    dd if=/dev/zero of=rootfs.ext4 bs=1M count=$(($sdrootsize+3))
+    dd if=/dev/zero of=rootfs.ext4 bs=1K count=$(($sdrootsize+3000))
     check $? "Write zero rootfs.ext4"
     mkfs.ext4 rootfs.ext4
     check $? "Creating ext4 filesystem"

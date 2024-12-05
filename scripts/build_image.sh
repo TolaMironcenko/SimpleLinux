@@ -13,11 +13,11 @@
 
 case $1 in
     build)
-        # rootfs
+        rootfs
         if [ "$image_usable_enable" = "true" ]; then
             sdroot_usable
         fi
-        # sdroot
+        sdroot
         # kernel_with_rootfs
         # uboot
         # busybox_rootfs

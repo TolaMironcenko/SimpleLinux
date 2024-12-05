@@ -23,7 +23,7 @@ uclibc() {
     find -name \*.a -delete # &>> $fulllogfile
     find -name \*.o -delete
     rm -v $rootfspath/usr/lib/libc.so
-    ${CROSS_COMPILE}-strip --strip-unneeded $rootfspath/usr/lib/* $rootfspath/usr/bin/* # &>> $fulllogfile
+    ${CROSS_COMPILE}-strip --strip-unneeded $rootfspath/usr/lib/* $rootfspath/usr/bin/* # &>> $fulllogfile $rootfspath/usr/lib/*
     rm -rv $rootfspath/usr/include
     cd $root
     check $? "Build and install uclibc"

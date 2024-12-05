@@ -26,7 +26,7 @@ dropbear() {
     make DESTDIR=$rootfspath install
     check $? "Installing to rootfs dropbear"
     rm -rv $rootfspath/usr/include $rootfspath/usr/share/man $rootfspath/usr/lib/{pkgconfig,libz.a}
-    ${CROSS_COMPILE}-strip $rootfspath/usr/bin/*
+    ${CROSS_COMPILE}-strip --strip-unneeded $rootfspath/usr/bin/*
     mkdir -pv $build/rootfs/etc/dropbear
     # check $? "Installing to rootfs zlib"
 }
