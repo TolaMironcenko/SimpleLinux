@@ -7,6 +7,7 @@
 . ./scripts/uclibc.sh
 . ./scripts/kernel.sh
 . ./scripts/zlib.sh
+. ./scripts/dropbear.sh
 
 #----------- Building rootfs ----------------------
 rootfs() {
@@ -19,6 +20,7 @@ rootfs() {
     ln -sv usr/lib lib32 # &>> $fulllogfile
     ln -sv usr/bin bin # &>> $fulllogfile
     ln -sv usr/bin sbin # &>> $fulllogfile
+    ln -sv var/run run
     cd usr
     ln -sv bin sbin # &>> $fulllogfile
     ln -sv lib lib32 # &>> $fulllogfile
@@ -36,7 +38,12 @@ rootfs() {
     uclibc
     kernel
     kernel_modules
-    zlib
+    if [ "$ZLIB_ENABLE" = "true" ]; then
+        zlib
+    fi
+    if [ "$DROPBEAR_ENABLE" = "true" ]; then
+        dropbear
+    fi
 
     chmod 640 $rootfspath/etc/shadow $rootfspath/etc/inittab
     chmod 755 $rootfspath/etc/init.d/* $rootfspath/usr/share/udhcpc/default.script $rootfspath/init

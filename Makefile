@@ -17,3 +17,6 @@ distclean:
 	if [ -d downloads ]; then \
 		rm -rv downloads; \
 	fi
+
+dropbear:
+	./scripts/build_image.sh dropbear

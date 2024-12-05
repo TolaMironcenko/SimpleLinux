@@ -15,12 +15,12 @@ kernel() {
     check $? "Extract Linux Kernel"
     cd linux-6.1.91
     printf "$UGREEN** Configuring Linux Kernel\n$RESET"
-    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE mrproper  # &>> $fulllogfile
+    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE- mrproper  # &>> $fulllogfile
     cp -v $root/kernel/config-6.1.91 .config # &>> $fulllogfile
-    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE oldconfig # &>> $fulllogfile
+    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE- oldconfig # &>> $fulllogfile
     check $? "Configure Linux Kernel"
     printf "$UGREEN** Building Linux Kernel\n$RESET"
-    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE $makeflags  # &>> $fulllogfile
+    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE- $makeflags  # &>> $fulllogfile
     check $? "Build Linux Kernel"
     ls -lh arch/$ARCH/boot/zImage
 } # kernel
@@ -30,10 +30,10 @@ kernel() {
 kernel_modules() {
     printf "$UGREEN** Building Linux Kernel modules\n$RESET"
     cd $build/kernel/linux-6.1.91
-    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE modules # &>> fulllogfile
+    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE- modules # &>> fulllogfile
     check $? "Build Linux Kernel modules"
     printf "$UGREEN** Installing Linux Kernel modules into rootfs path\n$RESET"
-    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$rootfspath modules_install # &>> $fulllogfile
+    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE- INSTALL_MOD_PATH=$rootfspath modules_install # &>> $fulllogfile
     rm -v $rootfspath/usr/lib/modules/6.1.91/{source,build}
     check $? "Install Linux Kernel modules"
 } # kernel_modules
@@ -46,7 +46,7 @@ kernel_with_rootfs() {
         mkdir -pv $out
     fi
     cd $build/kernel/linux-6.1.91
-    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE CONFIG_INITRAMFS_SOURCE=$rootfspath $makeflags # &>> fulllogfile
+    make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE- CONFIG_INITRAMFS_SOURCE=$rootfspath $makeflags # &>> fulllogfile
     check $? "Build Linux Kernel with rootfs"
     printf "$UGREEN** Installing Linux Kernel into images path\n$RESET"
     # make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=$rootfspath modules_install # &>> $fulllogfile

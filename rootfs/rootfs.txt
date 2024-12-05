@@ -13,7 +13,6 @@ mnt
 opt
 proc
 root
-run
 srv
 sys
 usr
