@@ -13,6 +13,9 @@
 
 case $1 in
     build)
+        if [ ! -d downloads ]; then
+            download_sources
+        fi
         rootfs
         if [ "$image_usable_enable" = "true" ]; then
             sdroot_usable
