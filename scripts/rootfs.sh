@@ -25,6 +25,7 @@ rootfs() {
     cd usr
     ln -sv bin sbin # &>> $fulllogfile
     ln -sv lib lib32 # &>> $fulllogfile
+    ln -sv bin libexec
     cd ..
     tar -xvf $root/downloads/initscripts-0.0.1-orangepi-pc.tar.gz
     cp -rv initscripts-0.0.1-orangepi-pc/* .
