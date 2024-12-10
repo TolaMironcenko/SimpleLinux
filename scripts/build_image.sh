@@ -32,6 +32,13 @@ case $1 in
     download)
         download_sources
         ;;
+    sdroot_usable)
+        if [ ! -d downloads ]; then
+          download_sources
+        fi
+        rootfs
+        sdroot_usable
+        ;;
     *)
         printf "$UYELLOW** $0 script using: $0 {clean|build|download|rootfs}\n$RESET"
         exit 1

@@ -20,3 +20,6 @@ distclean:
 
 dropbear:
 	./scripts/build_image.sh dropbear
+
+sdroot_usable:
+	./scripts/build_image.sh sdroot_usable
