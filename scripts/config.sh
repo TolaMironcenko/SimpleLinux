@@ -24,4 +24,5 @@ export sdroot=$out/sdroot
 export ZLIB_ENABLE="true"
 export DROPBEAR_ENABLE="true"
 export image_usable_enable="true"
+export sftp_server_enable="true"
 #--------------------------------------

@@ -8,6 +8,7 @@
 . ./scripts/kernel.sh
 . ./scripts/zlib.sh
 . ./scripts/dropbear.sh
+. ./scripts/sftp_server.sh
 
 #----------- Building rootfs ----------------------
 rootfs() {
@@ -43,6 +44,9 @@ rootfs() {
     fi
     if [ "$DROPBEAR_ENABLE" = "true" ]; then
         dropbear
+    fi
+    if [ "$sftp_server_enable" = "true" ]; then
+        sftp_server
     fi
 
     chmod 640 $rootfspath/etc/shadow $rootfspath/etc/inittab
