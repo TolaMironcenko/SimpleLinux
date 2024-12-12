@@ -9,6 +9,10 @@
 . ./scripts/zlib.sh
 . ./scripts/dropbear.sh
 . ./scripts/sftp_server.sh
+. ./scripts/curl.sh
+. ./scripts/bash.sh
+. ./scripts/git.sh
+. ./scripts/gitea.sh
 
 #----------- Building rootfs ----------------------
 rootfs() {
@@ -48,6 +52,18 @@ rootfs() {
     fi
     if [ "$sftp_server_enable" = "true" ]; then
         sftp_server
+    fi
+    if [ "$curl_enable" = "true" ]; then
+        curl
+    fi
+    if [ "$bash_enable" = "true" ]; then
+        bash
+    fi
+    if [ "$git_enable" = "true" ]; then
+        git
+    fi
+    if [ "$gitea_enable" = "true" ]; then
+        gitea
     fi
 
     chmod 640 $rootfspath/etc/shadow $rootfspath/etc/inittab

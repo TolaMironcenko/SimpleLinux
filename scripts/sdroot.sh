@@ -29,7 +29,7 @@ sdroot() {
     sdrootsize=(${rawsdrootsize// / })
     echo $sdrootsize
     echo $(($sdrootsize+2))
-    dd if=/dev/zero of=rootfs.ext4 bs=1K count=$(($sdrootsize+3000))
+    dd if=/dev/zero of=rootfs.ext4 bs=1K count=$(($sdrootsize+$sdrootsize))
     check $? "Write zero rootfs.ext4"
     mkfs.ext4 rootfs.ext4
     check $? "Creating ext4 filesystem"
@@ -66,7 +66,12 @@ sdroot_usable() {
     cp -v $root/extlinux/extlinux_usable.conf $sdroot/boot/extlinux/extlinux.conf
     check $? "Copy extlinux.conf"
     # kernel_with_rootfs
-    cp -rv $build/rootfs/* $sdroot/
+    # cp -rv $build/rootfs/* $sdroot/
+    cd $rootfspath
+    tar -czvf /tmp/rootfs.tar.gz.tmp .
+    cd $sdroot
+    tar -xvf /tmp/rootfs.tar.gz.tmp
+    
     initramfs
     cp -v $build/initramfs.img $sdroot/boot
     cp -v $build/kernel/linux-6.1.91/arch/$ARCH/boot/zImage $sdroot/boot
@@ -78,7 +83,7 @@ sdroot_usable() {
     sdrootsize=(${rawsdrootsize// / })
     echo $sdrootsize
     echo $(($sdrootsize+2))
-    dd if=/dev/zero of=rootfs.ext4 bs=1K count=$(($sdrootsize+3000))
+    dd if=/dev/zero of=rootfs.ext4 bs=1K count=$(($sdrootsize+$sdrootsize))
     check $? "Write zero rootfs.ext4"
     mkfs.ext4 rootfs.ext4
     check $? "Creating ext4 filesystem"
@@ -94,7 +99,12 @@ sdroot_usable() {
     sed -i "s/sdcard.img/sdcard_usable.img/g" genimage.cfg
     mkdir -v rootmnt
     sudo mount -v rootfs.ext4 rootmnt
-    sudo cp -rv $sdroot/* rootmnt/
+    cd $sdroot
+    sudo tar -czvf /tmp/sdroot.tar.gz.tmp .
+    cd $root/out/rootmnt
+    sudo tar -xvf /tmp/sdroot.tar.gz.tmp
+    cd $out
+    # sudo cp -rv $sdroot/* rootmnt/
     sudo umount -v rootfs.ext4
     rm -rv rootmnt
     mkdir input

@@ -21,8 +21,12 @@ export makeflags=-j$(nproc) # makeflags
 export CROSS_COMPILE=arm-buildroot-linux-uclibcgnueabihf
 export ARCH=arm
 export sdroot=$out/sdroot
-export ZLIB_ENABLE="true"
-export DROPBEAR_ENABLE="true"
+export ZLIB_ENABLE="false"
+export DROPBEAR_ENABLE="false"
 export image_usable_enable="true"
-export sftp_server_enable="true"
+export sftp_server_enable="false"
+export curl_enable="false"
+export bash_enable="false"
+export git_enable="false"
+export gitea_enable="true"
 #--------------------------------------
