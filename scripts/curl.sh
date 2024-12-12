@@ -29,7 +29,8 @@ curl() {
     rm \
         -rv \
         $rootfspath/usr/include \
-        $rootfspath/usr/share \
+        $rootfspath/usr/share/aclocal \
+        $rootfspath/usr/share/man \
         $rootfspath/usr/lib/*.a \
         $rootfspath/usr/lib/*.la \
         $rootfspath/usr/lib/pkgconfig
