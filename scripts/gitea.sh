@@ -23,7 +23,7 @@ gitea() {
     if [ ! -d $build/curl ]; then
         curl
     fi
-    if [ ! -d $build/curl ]; then
+    if [ ! -d $build/bash ]; then
         bash
     fi
     if [ ! -d $build/git ]; then
